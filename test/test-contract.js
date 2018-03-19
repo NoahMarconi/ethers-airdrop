@@ -7,7 +7,7 @@ var tools = require('ethers-cli');
 
 // Obviously a lot more is needed here; like transfer, et cetera.
 
-var AirDrop = require('./index');
+var AirDrop = require('../index');
 
 function balanceOfIndex(index) {
     return ethers.utils.parseUnits(String(1 + 10 * index), 18);
@@ -24,7 +24,7 @@ function deployAirDrop(count) {
 
         var airDrop = new AirDrop(balances);
 
-        var codes = builder.compile('./AirDropToken.sol', true);
+        var codes = builder.compile('../AirDropToken.sol', true);
 
         var airDropTokenCode = codes.AirDropToken;
 

@@ -99,6 +99,66 @@ var abiFragment = [
     }
 ];
 
+/**
+ * Reduce children nodes to thier merkel parent nodes. 
+ * This method is side effect free and returns a new array.
+ * @param {Array} leaves - Child nodes.
+ * @return {Array} - Parent nodes.
+ */
+function reduceMerkleParents(leaves) {
+    var output = [];
+    
+    for (var i = 0; i < leaves.length; i += 2) {
+        var left = leaves[i];
+        var right = leaves[i+1];
+
+        // If only left node, hash left with left.
+        output.push(ethers.utils.keccak256(left + (right ? right.substring(2) : left.substring(2))));
+    }
+
+    return output;
+}
+
+/** 
+ * Reduce children to Merkle root hash.
+ * @param {Array} leaves - Child nodes.
+ * @return {String} - Root hash. 
+ */
+function reduceMerkleRoot(leaves) {
+    var output = reduceMerkleParents(leaves);
+    
+    while (output.length > 1) {
+        output = reduceMerkleParents(output);
+    }
+
+    return output[0];
+}
+
+/** 
+ * Chunks tree into subsets of leaf nodes of size `C`
+ * @param {Array} leaves - Leaf nodes.
+ * @param {Number} C - Number of leaf nodes per chunk.
+ */
+function chunckMerkleTree(leaves, C) {
+    // Require power of 2.
+    // https://stackoverflow.com/questions/30924280/what-is-the-best-way-to-determine-if-a-given-number-is-a-power-of-two
+    if((Math.log(x)/Math.log(2)) % 1 !== 0) {
+        throw new Error('C must be a power of 2');
+    }
+
+    var chunks = [];
+    var root = [];
+    var currentLeaves = [];
+
+    for (var i = 0; i < leaves.length; i += C) {
+        currentLeaves = leaves.slice(i, C)
+        chunks.concat(currentLeaves);
+        root.push(reduceMerkleRoot(currentLeaves));
+    }
+
+    return { root: root, leaves: leaves, C: C };
+}
+
 function reduceMerkleBranches(leaves) {
     var output = [];
 
@@ -302,5 +362,12 @@ AirDrop.prototype.getInfo = function(provider, contractAddress) {
         }
     });
 }
+
+AirDrop.merkleTools = {
+    reduceMerkleParents: reduceMerkleParents,
+    chunckMerkleTree: chunckMerkleTree,
+    reduceMerkleRoot: reduceMerkleRoot
+};
+
 module.exports = AirDrop;
 
