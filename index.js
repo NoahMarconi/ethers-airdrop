@@ -139,7 +139,7 @@ function reduceMerkleRoot(leaves) {
  * @param {Array} leaves - Leaf nodes.
  * @param {Number} C - Number of leaf nodes per chunk.
  */
-function chunckMerkleTree(leaves, C) {
+function chunkMerkleTree(leaves, C) {
     // Require power of 2.
     // https://stackoverflow.com/questions/30924280/what-is-the-best-way-to-determine-if-a-given-number-is-a-power-of-two
     if((Math.log(C)/Math.log(2)) % 1 !== 0) {
@@ -365,7 +365,7 @@ AirDrop.prototype.getInfo = function(provider, contractAddress) {
 
 AirDrop.merkleTools = {
     reduceMerkleParents: reduceMerkleParents,
-    chunckMerkleTree: chunckMerkleTree,
+    chunkMerkleTree: chunkMerkleTree,
     reduceMerkleRoot: reduceMerkleRoot
 };
 

@@ -55,11 +55,11 @@ describe('Chunking Merkle', function() {
         });
     });
 
-    describe('chunckMerkleTree', function() {
+    describe('chunkMerkleTree', function() {
 
         it('should throw if C not a power of 2', function() {
             assert.throw(function() { AirDrop.merkleTools.chunckMerkleTree(exArray, 3) });
-            assert.doesNotThrow(function() { AirDrop.merkleTools.chunckMerkleTree(exArray, 8) });
+            assert.doesNotThrow(function() { AirDrop.merkleTools.chunkMerkleTree(exArray, 8) });
         });
     });
 });
