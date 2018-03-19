@@ -142,7 +142,7 @@ function reduceMerkleRoot(leaves) {
 function chunckMerkleTree(leaves, C) {
     // Require power of 2.
     // https://stackoverflow.com/questions/30924280/what-is-the-best-way-to-determine-if-a-given-number-is-a-power-of-two
-    if((Math.log(x)/Math.log(2)) % 1 !== 0) {
+    if((Math.log(C)/Math.log(2)) % 1 !== 0) {
         throw new Error('C must be a power of 2');
     }
 
