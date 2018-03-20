@@ -161,6 +161,62 @@ function chunkMerkleTree(leaves, C) {
     return { root: root, chunks: chunks, C: C };
 }
 
+/** 
+ * Computes proof on chunked merkle tree.
+ * @param {Number} index - Index of value in leaf array.
+ * @param {Array} chunkLeaves - Subset of leaf hashes.
+ * @param {Array} chunkRoots - Root hashes from each of the merkle chunks. 
+ */
+function chunkMerkleProof(index, chunkLeaves, chunkRoots) {
+    var leaves_0 = chunkLeaves;
+    var leaves_1 = chunkRoots;
+
+    var chunkSize = chunkLeaves.length;
+
+    if (index == null) { throw new Error('address not found'); }
+
+    var path = index;
+    var chunkPath = index % chunkSize;
+
+    var proof = [];
+
+    // Handle chunks first.
+    while (leaves_0.length > 1) {
+        
+        if ((path % 2) == 1) {
+            proof.push(leaves_0[chunkPath - 1])
+        } else {
+            proof.push(leaves_0[chunkPath + 1])
+        }
+
+        // Reduce the merkle tree one level
+        leaves_0 = reduceMerkleParents(leaves_0);
+
+        // Move up
+        path = parseInt(path / 2);
+        chunkPath = parseInt(chunkPath / 2)
+    }
+
+    // Then handle root hashes.
+    while (leaves_1.length > 1) {
+
+        if ((path % 2) == 1) {
+            proof.push(leaves_1[path - 1])
+        } else {
+            proof.push(leaves_1[path + 1])
+        }
+
+        // Reduce the merkle tree one level
+        leaves_1 = reduceMerkleParents(leaves_1);
+
+        // Move up
+        path = parseInt(path / 2);
+    }
+
+    return proof;
+}
+
+
 function reduceMerkleBranches(leaves) {
     var output = [];
 
@@ -368,7 +424,8 @@ AirDrop.prototype.getInfo = function(provider, contractAddress) {
 AirDrop.merkleTools = {
     reduceMerkleParents: reduceMerkleParents,
     chunkMerkleTree: chunkMerkleTree,
-    reduceMerkleRoot: reduceMerkleRoot
+    reduceMerkleRoot: reduceMerkleRoot,
+    chunkMerkleProof: chunkMerkleProof
 };
 
 module.exports = AirDrop;
