@@ -125,7 +125,7 @@ function reduceMerkleParents(leaves) {
  * @return {String} - Root hash. 
  */
 function reduceMerkleRoot(leaves) {
-    var output = reduceMerkleParents(leaves);
+    var output = leaves;
     
     while (output.length > 1) {
         output = reduceMerkleParents(output);
@@ -155,7 +155,7 @@ function chunkMerkleTree(leaves, C) {
         
         chunks.push(currentLeaves);
 
-        root.push(reduceMerkleRoot(currentLeaves));        
+        root.push(reduceMerkleRoot(currentLeaves));
     }
 
     return { root: root, chunks: chunks, C: C };
@@ -228,15 +228,15 @@ function checkMerkleProof(index, leafHash, merkleProof, merkleRoot) {
     var node = leafHash;
     var path = index;
     
-    for (var i = 0; i < merkleProof.length; i += 1) {
+    for (var i = 0; i < merkleProof.length; i += 1) {  
         if ((path & 0x01) == 1) {
-            node = ethers.utils.keccak256(merkleProof[i], node);
+            node = ethers.utils.keccak256(merkleProof[i] + node.substring(2));
         } else {
-            node = ethers.utils.keccak256(node, merkleProof[i]);
+            node = ethers.utils.keccak256(node + merkleProof[i].substring(2));
         }
         path = parseInt(path / 2);
     }
-
+    
     return node === merkleRoot;
 }
 
