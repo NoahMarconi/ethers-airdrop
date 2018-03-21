@@ -136,7 +136,7 @@ describe('Chunking Merkle', function() {
             var proof_1 = AirDrop.merkleTools.chunkMerkleProof(idx, result_1.chunks[Math.floor(idx/4)], result_1.root);
             var proof_2 = AirDrop.merkleTools.chunkMerkleProof(idx, result_2.chunks[Math.floor(idx/8)], result_2.root);
             var proof_3 = AirDrop.merkleTools.chunkMerkleProof(idx, result_3.chunks[Math.floor(idx/16)], result_3.root);
-            
+                     
             assert.deepEqual(proof_0, proof_1);
             assert.deepEqual(proof_0, proof_2);
             assert.deepEqual(proof_0, proof_3);
