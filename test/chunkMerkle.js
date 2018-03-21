@@ -134,7 +134,7 @@ describe('Chunking Merkle', function() {
 
         it('should chunk into correct root hashes', function() {
 
-            // assert.deepEqual(result_0.root, mNodes);
+            assert.deepEqual(result_0.root, mNodes);
             assert.deepEqual(result_1.root, nNodes);
             assert.deepEqual(result_2.root, oNodes);
             assert.equal(result_3.root[0], merkleRoot);
