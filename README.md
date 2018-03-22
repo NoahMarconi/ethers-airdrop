@@ -24,6 +24,7 @@ Usage:
     ethers-airdrop deploy TITLE SYMBOL [ DECIMALS ] --account ACCOUNT
     ethers-airdrop redeem CONTRACT_ADDRESS INDEX --account ACCOUNT
     ethers-airdrop lookup CONTRACT_ADDRESS INDEX_OR_ADDRESS
+    ethers-airdrop chunk NUM_CHUNKS
 
 Options:
   --balances      AirDrop Balance Data (default: ./airdrop-balances.json)

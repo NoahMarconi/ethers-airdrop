@@ -158,7 +158,7 @@ function chunkMerkleTree(leaves, C) {
         root.push(reduceMerkleRoot(currentLeaves));
     }
 
-    return { root: root, chunks: chunks, C: C };
+    return { root: { roots: root, count: leaves.length, C: C }, chunks: chunks };
 }
 
 /** 
@@ -228,7 +228,8 @@ function checkMerkleProof(index, leafHash, merkleProof, merkleRoot) {
     var node = leafHash;
     var path = index;
     
-    for (var i = 0; i < merkleProof.length; i += 1) {  
+    for (var i = 0; i < merkleProof.length; i += 1) {
+        // Odd / Even check
         if ((path & 0x01) == 1) {
             node = ethers.utils.keccak256(merkleProof[i] + node.substring(2));
         } else {
@@ -449,7 +450,9 @@ AirDrop.merkleTools = {
     chunkMerkleTree: chunkMerkleTree,
     reduceMerkleRoot: reduceMerkleRoot,
     chunkMerkleProof: chunkMerkleProof,
-    checkMerkleProof: checkMerkleProof
+    checkMerkleProof: checkMerkleProof,
+    expandLeaves: expandLeaves,
+    getLeaves: getLeaves
 };
 
 module.exports = AirDrop;

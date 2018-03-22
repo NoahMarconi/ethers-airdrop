@@ -110,6 +110,30 @@ getopts(options).then(function(opts) {
             });
         })();
 
+        case 'chunk': return (function() {
+
+            return (function() {
+                if (opts.args.length !== 1) { throw new Error('chunk requires NUM_CHUNKS'); }
+                var numChunks = opts.args.shift();
+    
+                var leaves = AirDrop.merkleTools.expandLeaves(airDrop.balances);
+                var hashArray = AirDrop.merkleTools.getLeaves(airDrop.balances);
+                var chunkedMerkleTree = AirDrop.merkleTools.chunkMerkleTree(hashArray, numChunks);
+    
+                console.log('Writing: airdrop-merkle-root.json');
+                fs.writeFileSync('airdrop-merkle-root.json', JSON.stringify(chunkedMerkleTree.root));
+                
+                chunkedMerkleTree.chunks.forEach(function(el, idx) {
+                    console.log('Writing: airdrop-merkle-chunk_' + idx + '.json    ' + idx + ' of ' + chunkedMerkleTree.chunks.length);
+                    fs.writeFileSync('airdrop-merkle-chunk_' + idx + '.json', JSON.stringify(el));
+                });
+
+                console.log('Writing: airdrop-balance-leaves.json');
+                fs.writeFileSync('airdrop-balance-leaves.json', JSON.stringify(leaves));
+            });
+
+        })();
+
         default:
             getopts.throwError('unknown command: ' + command);
     }
@@ -125,6 +149,7 @@ getopts(options).then(function(opts) {
     console.log('    ethers-airdrop deploy TITLE SYMBOL [ DECIMALS ] --account ACCOUNT');
     console.log('    ethers-airdrop redeem CONTRACT_ADDRESS INDEX --account ACCOUNT');
     console.log('    ethers-airdrop lookup CONTRACT_ADDRESS INDEX_OR_ADDRESS');
+    console.log('    ethers-airdrop chunk NUM_CHUNKS');
     console.log('');
     console.log('Options:');
     console.log('  --balances      AirDrop Balance Data (default: ./airdrop-balances.json)');

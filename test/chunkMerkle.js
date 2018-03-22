@@ -145,19 +145,19 @@ describe('Chunking Merkle', function() {
             assert.strictEqual(result_3.chunks.length, 1);
 
             // Roots are expected size.
-            assert.strictEqual(result_0.root.length, 8);
-            assert.strictEqual(result_1.root.length, 4);
-            assert.strictEqual(result_2.root.length, 2);
-            assert.strictEqual(result_3.root.length, 1);
+            assert.strictEqual(result_0.root.roots.length, 8);
+            assert.strictEqual(result_1.root.roots.length, 4);
+            assert.strictEqual(result_2.root.roots.length, 2);
+            assert.strictEqual(result_3.root.roots.length, 1);
 
         });
 
         it('should chunk into correct root hashes', function() {
 
-            assert.deepEqual(result_0.root, mNodes);
-            assert.deepEqual(result_1.root, nNodes);
-            assert.deepEqual(result_2.root, oNodes);
-            assert.equal(result_3.root[0], merkleRoot);
+            assert.deepEqual(result_0.root.roots, mNodes);
+            assert.deepEqual(result_1.root.roots, nNodes);
+            assert.deepEqual(result_2.root.roots, oNodes);
+            assert.equal(result_3.root.roots[0], merkleRoot);
         });
     });
 
@@ -178,10 +178,10 @@ describe('Chunking Merkle', function() {
 
         it('should produce the same merkle proof from any chunkSize', function() {
             var idx = 10;
-            var proof_0 = AirDrop.merkleTools.chunkMerkleProof(idx, result_0.chunks[Math.floor(idx/2)], result_0.root);
-            var proof_1 = AirDrop.merkleTools.chunkMerkleProof(idx, result_1.chunks[Math.floor(idx/4)], result_1.root);
-            var proof_2 = AirDrop.merkleTools.chunkMerkleProof(idx, result_2.chunks[Math.floor(idx/8)], result_2.root);
-            var proof_3 = AirDrop.merkleTools.chunkMerkleProof(idx, result_3.chunks[Math.floor(idx/16)], result_3.root);
+            var proof_0 = AirDrop.merkleTools.chunkMerkleProof(idx, result_0.chunks[Math.floor(idx/2)], result_0.root.roots);
+            var proof_1 = AirDrop.merkleTools.chunkMerkleProof(idx, result_1.chunks[Math.floor(idx/4)], result_1.root.roots);
+            var proof_2 = AirDrop.merkleTools.chunkMerkleProof(idx, result_2.chunks[Math.floor(idx/8)], result_2.root.roots);
+            var proof_3 = AirDrop.merkleTools.chunkMerkleProof(idx, result_3.chunks[Math.floor(idx/16)], result_3.root.roots);
                      
             assert.deepEqual(proof_0, proof_1);
             assert.deepEqual(proof_0, proof_2);
@@ -196,7 +196,7 @@ describe('Chunking Merkle', function() {
 
         before(function() {
             result_0 = AirDrop.merkleTools.chunkMerkleTree(hashedLeaves, 2);
-            proof_0 = AirDrop.merkleTools.chunkMerkleProof(idx, result_0.chunks[Math.floor(idx/2)], result_0.root);
+            proof_0 = AirDrop.merkleTools.chunkMerkleProof(idx, result_0.chunks[Math.floor(idx/2)], result_0.root.roots);
         });
 
         it('should verify the proof matches the merkle root', function() {
